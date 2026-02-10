@@ -1,2 +1,2 @@
 # scrabble-example
-Building scrabble using CL
+Building scrabble on the CL
