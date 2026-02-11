@@ -3,24 +3,18 @@ import copy
 
 
 class ScrabbleBoard():
-    def __init__(self, letters: list):
+    def __init__(self):
         # Scrabble boards are 15x15 generally,
         # reoresented by nested list
         self.board = [[str(i+j*15) for i in range(15)] for j in range(15)]
         self.hypo_board = self.board
         self.n_moves = 0
-        self.letters = letters
         self.middle = "112"  # Should start from the middle.
         self.get_words()
 
     def get_words(self):
         with open("scrabble_words.txt") as f:
             self.all_words = f.read().split("\n")
-
-    def get_letter(self):
-        # Take a random letter from the letters list and return it
-        random.shuffle(self.letters)
-        return self.letters.pop()
 
     def conv_idx_to_coords(self, idx):
         return (idx // 15, idx % 15)
