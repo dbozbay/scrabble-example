@@ -13,15 +13,24 @@ class Scrabble():
         self.n_players = len(self.players)  # 0
 
     def start_names(self):
-        while not self.validate_n_players(n_players):
-            n_players = input("How many players do you want to play [2-4]? ")
+        while not self.validate_n_players():
+            self.n_players = input(
+                "How many players do you want to play [2-4]? ")
+
+        for i in range(self.n_players):
+            player_name = input(f"Please insert player {i} name: ")
+            if player_name.strip() == "":
+                self.players.append(f"Player {i+1}")
+            else:
+                self.players.append(player_name)
+        print(self.players)
 
     def validate_n_players(self):
         try:
-            n_players = int(n_players)
+            self.n_players = int(self.n_players)
         except:
             return False
-        if n_players < 2 or n_players > 4:
+        if self.n_players < 2 or self.n_players > 4:
             return False
         return True
 
@@ -46,7 +55,6 @@ class Scrabble():
             return True
 
     def take_input(self):
-        print(f"{self.player1}'s turn.")
         slot_valid, hor_valid, word_valid = None, None, None
 
         while not slot_valid:
@@ -66,7 +74,16 @@ class Scrabble():
             total_score += self.score_dict[char]
         return total_score
 
+    def play(self):
+        self.start_names()
+        i = 0
+        while i < 15:
+            self.curr_player = self.players[i % self.n_players]
+            print(f"{self.curr_player}'s turn")
+            self.take_input()
+            i += 1
+
 
 if __name__ == "__main__":
     scrabble_example = Scrabble(board=None)
-    scrabble_example.take_input("Talha")
+    scrabble_example.play()
