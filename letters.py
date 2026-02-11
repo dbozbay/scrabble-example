@@ -1,13 +1,10 @@
 import random
+import json
 
 
 class Letter():
     def __init__(self):
         pass
-
-# with open("game_info.json", "r") as f:
-#     game_info = json.load(f)
-# self.score_dict = game_info["points"]
 
 
 class Letters():
@@ -24,12 +21,21 @@ class Letters():
             "U": 4, "V": 2, "W": 2, "X": 1, "Y": 2, "Z": 1
         }
         self.pickup_tiles = [tile*self.tiles[tile] for tile in self.tiles]
+        with open("game_info.json", "r") as f:
+            game_info = json.load(f)
+            self.score_dict = game_info["points"]
 
     def pick_up_letters(self, current_letters: list):
         while len(current_letters) < self.max_letters_on_hand and self.pickup_tiles:
             random.shuffle(self.pickup_tiles)
             current_letters.append(self.pickup_tiles.pop())
         return current_letters
+
+    def get_word_score(self, word):
+        total_score = 0
+        for char in word:
+            total_score += self.score_dict[char]
+        return total_score
 
     def show_current_letters(self, letters: list):
         print(letters)

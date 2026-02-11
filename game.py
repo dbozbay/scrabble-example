@@ -38,21 +38,17 @@ class Scrabble():
             self.slot = input("Please insert your starting point (0-224): ")
             self.checker.user_in = self.slot
             slot_valid = self.checker.validate_input_slot()
+        self.slot = int(self.slot)
         while not hor_valid:
             self.hor_vert = input(
                 "Please specify if the word is vertical (v) or horizontal (h): ")
             self.checker.user_in = self.hor_vert
             hor_valid = self.checker.validate_hor()
+        self.hor_input = True if self.hor_vert == "v" else False
         while not word_valid:
             self.word_input = input("Please enter your word: ")
             self.checker.user_in = self.word_input
             word_valid = self.checker.validate_word_input()
-
-    def word_score(self, player):
-        total_score = 0
-        for char in self.word_input:
-            total_score += self.score_dict[char]
-        return total_score
 
     def play(self):
         print("starting game")
@@ -62,6 +58,7 @@ class Scrabble():
             self.curr_player = self.players[i % self.n_players]
             print(f"{self.curr_player}'s turn")
             self.take_input()
+            self.board.input_word(self.slot, self.hor_input, self.word_input)
             i += 1
 
     def get_letter(self):
@@ -72,7 +69,8 @@ class Scrabble():
 
 board = ScrabbleBoard()
 input_checker = InputChecker()
+letters = Letters()
 
 if __name__ == "__main__":
-    scrabble_example = Scrabble(board, input_checker)
+    scrabble_example = Scrabble(board, input_checker, letters)
     scrabble_example.play()

@@ -460,7 +460,7 @@ class ScrabbleBoard():
             self.insert_word(start, hor, word)
         else:
             print(outcome[1])
-        scrabble_board.display_board()
+        self.display_board()
 
     def validation_check(self, word_list: list):
         # Check all words formed are valid words
@@ -473,10 +473,10 @@ class ScrabbleBoard():
 
 
 if __name__ == "__main__":
-    scrabble_board = ScrabbleBoard(None)
+    scrabble_board = ScrabbleBoard()
     scrabble_board.display_board()
     # inserting alpha at the start and beta at some point.
-    scrabble_board.input_word(34, True, "alpha")
-    scrabble_board.input_word(50, False, "psers")
+    scrabble_board.input_word(50, True, "alpha")
+    scrabble_board.input_word(67, False, "eters")
     # scrabble_board.insert_word(51, False, "lalala")
     print(scrabble_board.letter_in_pos(scrabble_board.conv_idx_to_coords(66)))
