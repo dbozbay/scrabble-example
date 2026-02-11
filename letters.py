@@ -19,6 +19,11 @@ class Letters():
             "P": 2, "Q": 1, "R": 6, "S": 4, "T": 6,
             "U": 4, "V": 2, "W": 2, "X": 1, "Y": 2, "Z": 1
         }
+        self.pickup_tiles = [tile*self.tiles[tile] for tile in self.tiles]
 
     def pick_up_letters(self):
-        while len(self.letters_on_hand) < 7:
+        while len(self.letters_on_hand) < 7 and self.pickup_tiles:
+            random.shuffle(self.pickup_tiles)
+            self.letters_on_hand.append(self.pickup_tiles.pop())
+
+    def
