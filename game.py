@@ -1,12 +1,13 @@
 from board import ScrabbleBoard
 from input_checker import InputChecker
 from letters import Letters
+from player import Player
 import json
 import random
 
 
 class Scrabble():
-    def __init__(self, board: ScrabbleBoard, checker: InputChecker, letters: Letters):
+    def __init__(self, board: ScrabbleBoard, checker: InputChecker, letters_collection: Letters):
         print("PLAYING SCRABBLE")
 
         self.board = board
@@ -16,6 +17,7 @@ class Scrabble():
         self.curr_player = None
         self.players = []
         self.n_players = len(self.players)  # 0
+        #  player score and whatever letters they might have.
 
     def start_names(self):
         while not self.checker.validate_n_players():
@@ -26,9 +28,8 @@ class Scrabble():
         for i in range(self.n_players):
             player_name = input(f"Please insert player {i} name: ")
             if player_name.strip() == "":
-                self.players.append(f"Player {i+1}")
-            else:
-                self.players.append(player_name)
+                player_name = f"Player {i+1}"
+            self.players.append(Player(name=player_name))
         print(self.players)
 
     def take_input(self):
@@ -50,13 +51,20 @@ class Scrabble():
             self.checker.user_in = self.word_input
             word_valid = self.checker.validate_word_input()
 
+    def take_letters(self):
+        # It will pick up letters based on the current player's letters
+        self.curr_player.letters = self.letters.pick_up_letters(
+            self.curr_player.letters)
+        print(self.curr_player)
+
     def play(self):
         print("starting game")
         self.start_names()
         i = 0
         while i < 15:
             self.curr_player = self.players[i % self.n_players]
-            print(f"{self.curr_player}'s turn")
+            print(f"{self.curr_player.name}'s turn")
+            self.take_letters()
             self.take_input()
             self.board.input_word(self.slot, self.hor_input, self.word_input)
             i += 1
