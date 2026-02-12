@@ -409,6 +409,8 @@ class ScrabbleBoard():
 
     def try_word(self, start: int, hor: bool, word: str) -> bool:
         word = word.upper()
+        self.req_letters = []
+        # Say for example "NOTEBOOK"
         corresp_row, corresp_column = self.conv_idx_to_coords(start)
         start_coords = (corresp_row, corresp_column)
         self.hypo_board = copy.deepcopy(self.board)
@@ -419,9 +421,20 @@ class ScrabbleBoard():
         if max(end_coords) > 14:
             return False, "The word will go out of the board!"
         for i, char in enumerate(word):
+            #  We need to check for overlaps
             if hor:
+                if self.hypo_board[corresp_row][corresp_column + i] != char and self.hypo_board[corresp_row][corresp_column + i].isalpha():
+                    return False, "Overlapping an original letter"
+                if self.hypo_board[corresp_row][corresp_column + i] != char:
+                    self.req_letters.append(char)
+                    # Now we know that this has to come from our hand.
                 self.hypo_board[corresp_row][corresp_column + i] = char
             else:
+                if self.hypo_board[corresp_row + i][corresp_column] != char and self.hypo_board[corresp_row + i][corresp_column].isalpha():
+                    return False, "Overlapping an original letter"
+                if self.hypo_board[corresp_row][corresp_column + i] != char:
+                    self.req_letters.append(char)
+                    # Now we know that this has to come from our hand.
                 self.hypo_board[corresp_row + i][corresp_column] = char
         for i in range(len(word)):
             if hor:
