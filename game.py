@@ -36,18 +36,22 @@ class Scrabble():
         slot_valid, hor_valid, word_valid = None, None, None
 
         while not slot_valid:
-            self.slot = input("Please insert your starting point (0-224): ")
+            self.slot = input(
+                "Please insert your starting point (0-224) or 'swap' to swap tiles: ").strip()
             self.checker.user_in = self.slot
             slot_valid = self.checker.validate_input_slot()
+            if self.slot == "swap":
+                return self.slot
+
         self.slot = int(self.slot)
         while not hor_valid:
             self.hor_vert = input(
-                "Please specify if the word is vertical (v) or horizontal (h): ")
+                "Please specify if the word is vertical (v) or horizontal (h): ").strip()
             self.checker.user_in = self.hor_vert
             hor_valid = self.checker.validate_hor()
         self.hor_input = False if self.hor_vert == "v" else True
         while not word_valid:
-            self.word_input = input("Please enter your word: ")
+            self.word_input = input("Please enter your word: ").strip()
             self.checker.user_in = self.word_input
             word_valid = self.checker.validate_word_input()
 
@@ -68,16 +72,19 @@ class Scrabble():
             self.take_letters()
             self.board.display_board()
             while self.curr_player.letters:
-                try_again = False
+                invalid_letters = False
                 print(f"{self.curr_player.name}'s turn")
                 print(self.curr_player)
-                self.take_input()
+                move = self.take_input()
+                if move == "swap":
+                    # Swap letters
+                    self.letters.replace_all_letters(self.curr_player.letters)
                 for letter in self.word_input:
                     if letter not in self.curr_player.letters:
                         print("Invalid letters given")
-                        try_again = True
+                        invalid_letters = True
                         break
-                if try_again:
+                if invalid_letters:
                     continue
                 if self.board.input_word(self.slot, self.hor_input, self.word_input):
                     break
