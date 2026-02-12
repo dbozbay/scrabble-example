@@ -13,7 +13,7 @@ class Scrabble():
 
         self.board = board
         self.checker = checker
-        self.letters = letters
+        self.letters = letters_collection
 
         self.curr_player = None
         self.players = []

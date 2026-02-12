@@ -417,6 +417,7 @@ class ScrabbleBoard():
         self.hor = hor
         word = word.upper()
         self.req_letters = []
+        all_additional_words = []
         found_some_neighbours = False
         passes_through_middle = False
 
@@ -464,8 +465,21 @@ class ScrabbleBoard():
                     if not validation_check[0]:
                         # This move would be illegal
                         return False, f"Invalid word found ({validation_check[1]})"
+                    additional_words = self.turn_to_words(
+                        neighbouring_words_all_info)
+                    #  Check for uniqueness. If not unique, add them to the set of words
+                    all_additional_words.extend(additional_words)
+        self.check_words_for_uniqueness(all_additional_words)
+        total_possible_score = 0
+        for added_word in all_additional_words:
+            # That means this is fresh.
+            self.added_word.get_score_unique()
+            if added_word.new:
+                self.unique_words_found.add(added_word)
+
         if not found_some_neighbours and not passes_through_middle:
             return False, "Word is unconnected"
+
         return True, "Word is playable."
 
     def turn_to_words(self, collection_of_words: list[list]) -> list[Word]:
@@ -488,10 +502,16 @@ class ScrabbleBoard():
     def add_to_unique_words(self, word: Word):
         self.unique_words_found.add(word)
 
+    def check_words_for_uniqueness(self, checking_words: list[Word]):
+        for checking_word in checking_words:
+            self.check_word_for_uniqueness(checking_word)
+
     def check_word_for_uniqueness(self, checking_word: Word):
+        if checking_word == "":
+            checking_word.new = False
         for word in self.unique_words_found:
             if word.word == checking_word.word and word.start_pos == checking_word.start_pos and word.orientation == checking_word.orientation:
-                return False
+                checking_word.new = False
         return True
 
     def insert_word(self, start: int, hor: bool, word: str):

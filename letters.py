@@ -1,6 +1,4 @@
 import random
-import json
-import copy
 
 
 class Letter():
@@ -24,9 +22,6 @@ class Letters():
         self.pickup_tiles = [tile
                              for tile in self.tiles for i in range(self.tiles[tile])]
         print(self.pickup_tiles)
-        with open("game_info.json", "r") as f:
-            game_info = json.load(f)
-            self.score_dict = game_info["points"]
 
     def pick_up_letters(self, current_letters: list):
         print(f"current letters: {current_letters}")
