@@ -104,6 +104,9 @@ class Scrabble():
             if self.curr_player.letters:
                 while not self.take_turn():
                     pass
+                self.curr_player.score += self.board.word_score
+                print(
+                    f"{self.curr_player.name} is now on {self.curr_player.score} points")
             i += 1
 
     def get_letter(self):

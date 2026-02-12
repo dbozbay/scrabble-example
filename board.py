@@ -1,6 +1,7 @@
 import random
 import copy
 from word import Word
+import json
 
 
 class ScrabbleBoard():
@@ -14,6 +15,7 @@ class ScrabbleBoard():
         self.mid_point = self.conv_idx_to_coords(int(self.middle))
         self.get_words()
         self.unique_words_found = set()
+        self.word_score = 0
 
     def get_words(self):
         with open("scrabble_words.txt") as f:
@@ -469,18 +471,21 @@ class ScrabbleBoard():
                         neighbouring_words_all_info)
                     #  Check for uniqueness. If not unique, add them to the set of words
                     all_additional_words.extend(additional_words)
-        self.check_words_for_uniqueness(all_additional_words)
-        total_possible_score = 0
-        for added_word in all_additional_words:
-            # That means this is fresh.
-            self.added_word.get_score_unique()
-            if added_word.new:
-                self.unique_words_found.add(added_word)
 
         if not found_some_neighbours and not passes_through_middle:
             return False, "Word is unconnected"
 
-        return True, "Word is playable."
+        self.check_words_for_uniqueness(all_additional_words)
+        self.word_score = 0
+        for added_word in all_additional_words:
+            # That means this is fresh.
+            word_score = added_word.get_score_unique()
+            print(f"{word_score} points for {added_word.word}")
+            self.word_score += added_word.get_score_unique()
+            if added_word.new:
+                self.unique_words_found.add(added_word)
+
+        return True, "Word is playable.", self.word_score
 
     def turn_to_words(self, collection_of_words: list[list]) -> list[Word]:
         """

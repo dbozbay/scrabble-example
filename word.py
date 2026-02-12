@@ -7,13 +7,36 @@ class Word():
         self.start_pos = start_pos
         self.orientation = orientation
         self.new = True
+        self.score_dict = {
+            "A": 1,
+            "B": 3,
+            "C": 3,
+            "D": 3,
+            "E": 1,
+            "F": 4,
+            "G": 3,
+            "H": 4,
+            "I": 1,
+            "J": 8,
+            "K": 5,
+            "L": 2,
+            "M": 3,
+            "N": 1,
+            "O": 1,
+            "P": 3,
+            "Q": 10,
+            "R": 1,
+            "S": 1,
+            "T": 1,
+            "U": 1,
+            "V": 4,
+            "W": 4,
+            "X": 8,
+            "Y": 4,
+            "Z": 10
+        }
 
-    def load_score(self):
-        with open("game_info.json", "r") as f:
-            game_info = json.load(f)
-            self.score_dict = game_info["points"]
-
-    def get_score(self) -> int:
+    def get_score(self, score_map) -> int:
         # TODO: Try and incorporate 2x letter, 3x word tiles etc
         #  By combining placed points.
         total_score = 0
