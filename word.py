@@ -36,7 +36,7 @@ class Word():
             "Z": 10
         }
 
-    def get_score(self, score_map) -> int:
+    def get_score(self) -> int:
         # TODO: Try and incorporate 2x letter, 3x word tiles etc
         #  By combining placed points.
         total_score = 0
