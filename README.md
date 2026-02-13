@@ -2,5 +2,6 @@
 Building scrabble on the CL
 to start
 
-``` source activate .venv/bin/activate ```
+``` source .venv/bin/activate ```
   ```  python3 game.py```
+
