@@ -5,20 +5,36 @@ from player import Player
 import json
 import random
 import copy
+#  "pip install pandas" if this doesn't exist
+import pandas as pd
+import os
 
 
 class Scrabble():
-    def __init__(self, board: ScrabbleBoard, checker: InputChecker, letters_collection: Letters):
+    def __init__(self, board: ScrabbleBoard, checker: InputChecker, letters_collection: Letters, log: bool = True):
         print("PLAYING SCRABBLE")
 
         self.board = board
         self.checker = checker
         self.letters = letters_collection
+        self.log = log
+        self.all_moves = []
 
         self.curr_player = None
         self.players = []
         self.n_players = len(self.players)  # 0
         #  player score and whatever letters they might have.
+        self.save_path = None
+        if log:
+            self.find_unique_filename()
+
+    def find_unique_filename(self):
+        possible_fname = "game.csv"
+        i = 0
+        while os.path.isfile(possible_fname):
+            i += 1
+            possible_fname = f"game ({i}).csv "
+        self.save_path = possible_fname
 
     def start_names(self):
         while not self.checker.validate_n_players():
@@ -106,7 +122,17 @@ class Scrabble():
                 self.curr_player.score += self.board.word_score
                 print(
                     f"{self.curr_player.name} is now on {self.curr_player.score} points")
+                if self.log:
+                    move_info = {
+                        "word": [self.board.most_recent_move.word],
+                        "hor": [self.board.most_recent_move.orientation],
+                        "starting_position": [self.board.most_recent_move.pos]
+                    }
+                    with open(self.save_path, "w") as f:
+                        pd.DataFrame(move_info).to_csv(
+                            f, mode="-a", header=not os.path.exists(self.save_path))
             i += 1
+        # Game has ended at this point
 
     def play_auto(self, moves: list):
         print("starting game")

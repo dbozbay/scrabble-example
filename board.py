@@ -2,6 +2,7 @@ import random
 import copy
 from word import Word
 import json
+from test_game import Move
 
 
 class ScrabbleBoard():
@@ -16,6 +17,7 @@ class ScrabbleBoard():
         self.get_words()
         self.unique_words_found = []
         self.word_score = 0
+        self.most_recent_move = Move(None, None, None)
 
     def get_words(self):
         with open("scrabble_words.txt") as f:
@@ -538,6 +540,7 @@ class ScrabbleBoard():
                 self.board[corresp_row][corresp_column + i] = char
             else:
                 self.board[corresp_row + i][corresp_column] = char
+        self.most_recent_move.update(pos=start, orientation=hor, word=word)
         print("inserted word!")
 
     def input_word(self, start: int, hor: bool, word: str):
@@ -565,7 +568,7 @@ if __name__ == "__main__":
     scrabble_board = ScrabbleBoard()
     scrabble_board.display_board()
     # inserting alpha at the start and beta at some point.
-    scrabble_board.input_word(50, True, "alpha")
+    scrabble_board.input_word(110, True, "alpha")
     scrabble_board.input_word(67, False, "eters")
     # scrabble_board.insert_word(51, False, "lalala")
     print(scrabble_board.letter_in_pos(scrabble_board.conv_idx_to_coords(66)))
