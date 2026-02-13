@@ -29,11 +29,11 @@ class Scrabble():
             self.find_unique_filename()
 
     def find_unique_filename(self):
-        possible_fname = "games/game.csv"
+        possible_fname = "logged_games/game.csv"
         i = 0
         while os.path.isfile(possible_fname):
             i += 1
-            possible_fname = f"games/game{i}.csv"
+            possible_fname = f"logged_games/game{i}.csv"
         self.save_path = possible_fname
         self.header = True
 
