@@ -546,13 +546,13 @@ class ScrabbleBoard():
     def input_word(self, start: int, hor: bool, word: str):
         outcome = self.try_word(start, hor, word)
         self.display_board()
-        print(outcome[0])
+        print(outcome[0], outcome[1])
         if outcome[0]:
-            self.insert_word(start, hor, word)
+            # self.insert_word(start, hor, word)
+            return True
         else:
             print(outcome[1])
             return False
-        return True
 
     def validation_check(self, word_list: list):
         # Check all words formed are valid words

@@ -86,18 +86,20 @@ class Scrabble():
         for letter in self.board.req_letters:
             print(letter)
             self.curr_player.letters.remove(letter.upper())
+        self.board.insert_word(self.slot, self.hor_input, self.word_input)
 
     def take_turn(self):
         print(f"{self.curr_player.name}'s turn")
         print(self.curr_player)
         move = self.take_input()
+        #  Player can either play a word here or swap tiles
         if move == "swap":
             # Swap letters
             self.letters.replace_all_letters(
                 self.curr_player.letters)
             return True
         if self.board.input_word(self.slot, self.hor_input, self.word_input):
-            # This is a valid input, so we can leave this playerinput block
+            # Input found to be valid, but now we need to check if we have the relevant letters too
             player_letters = copy.deepcopy(self.curr_player.letters)
             for letter in self.board.req_letters:
                 print(letter)
@@ -107,7 +109,7 @@ class Scrabble():
 
                     return False
                 player_letters.remove(letter)
-
+            #  place_letters will place them on the board.
             self.place_letters()
             return True
 
