@@ -49,10 +49,12 @@ class Scrabble():
                 player_name = f"Player {i+1}"
             self.players.append(Player(name=player_name))
 
-    def take_input(self):
+    def take_input(self) -> str | None:
         slot_valid, hor_valid, word_valid = None, None, None
 
         while not slot_valid:
+            print("NOTE: If trying to fill a word with existing letters,"
+                  "type the full word in e.g. placing 'g' in 'e(g)g', type 'egg'")
             self.slot = input(
                 "Please insert your starting point (0-224) or 'swap' to swap tiles: ").strip()
             self.checker.user_in = self.slot

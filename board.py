@@ -388,7 +388,7 @@ class ScrabbleBoard():
         # This lets us see if the word is going vertically or horizontally
         # If the word is going horizontally then we should expect to see another letter left/right
         # If the word is going vertically then we should expect to see another letter up/down
-        # It might go both
+        # It might go both ways
         words = ["", ""]
         coords_orig = list(coords).copy()
         coords = list(coords)
