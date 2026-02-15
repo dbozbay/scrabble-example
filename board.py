@@ -5,6 +5,18 @@ import json
 from test_game import Move
 
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 class ScrabbleBoard():
     def __init__(self):
         # Scrabble boards are 15x15 generally,
@@ -433,14 +445,12 @@ class ScrabbleBoard():
             while self.right(coords).isalpha():
                 words[0] += self.right(coords)
                 coords[1] = coords[1] + 1
-                print(self.right(coords))
             pass
 
         coords = coords_orig
         if self.up(coords).isalpha() or self.down(coords).isalpha():
             # Word is vertical
             while self.up(coords).isalpha():
-                print(self.up(coords))
                 coords[0] = coords[0] - 1
             word_coords.append(coords.copy())
             words[1] += self.letter_in_pos(coords)
@@ -531,7 +541,7 @@ class ScrabbleBoard():
         """
         words_list = []
         for i in range(len(collection_of_words[0])):
-            words_list.append(Word(
+            words_list.append(self.turn_to_word(
                 collection_of_words[0][i], self.conv_coords_to_idx(collection_of_words[1][i]), collection_of_words[2][i]))
         return words_list
 

@@ -1,4 +1,4 @@
-from board import ScrabbleBoard
+from board import ScrabbleBoard, bcolors
 from input_checker import InputChecker
 from letters import Letters
 from player import Player
@@ -13,6 +13,7 @@ import os
 
 class Scrabble():
     def __init__(self, board: ScrabbleBoard, checker: InputChecker, letters_collection: Letters, log: bool = True):
+        print(bcolors.OKGREEN)
         print(r"""
           _____                    _____                    _____                    _____                    _____                    _____                    _____            _____          
          /\    \                  /\    \                  /\    \                  /\    \                  /\    \                  /\    \                  /\    \          /\    \         
@@ -38,6 +39,7 @@ class Scrabble():
                                                                                                                                                                                                 
               
               """)
+        print(bcolors.ENDC)
         self.board = board
         self.checker = checker
         self.letters = letters_collection
@@ -110,7 +112,6 @@ class Scrabble():
 
     def place_letters(self):
         for letter in self.board.req_letters:
-            print(letter)
             self.curr_player.letters.remove(letter.upper())
         self.board.insert_word(self.slot, self.hor_input, self.word_input)
 
