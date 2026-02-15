@@ -405,6 +405,7 @@ class ScrabbleBoard():
                     ]
 
     def display_board(self):
+        print("\n"*4)
         for line in self.board:
             for element in line:
                 if element.isalpha():
@@ -413,6 +414,7 @@ class ScrabbleBoard():
                 else:
                     print(element.rjust(5), end="|")
             print("\n" + "-"*100)
+        print("\n"*4)
 
     def gain_word_from_letter(self, coords):
         # This lets us see if the word is going vertically or horizontally
