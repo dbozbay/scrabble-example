@@ -3,18 +3,7 @@ import copy
 from word import Word
 import json
 from test_game import Move
-
-
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
+from responses import *
 
 
 class ScrabbleBoard():
@@ -459,7 +448,7 @@ class ScrabbleBoard():
                 coords[0] = coords[0] + 1
         return [words, word_coords, [True, False]]
 
-    def try_word(self, start: int, hor: bool, word: str) -> bool:
+    def try_word(self, start: int, hor: bool, word: str) -> bool | Mistake:
         self.hor = hor
         word = word.upper()
         self.req_letters = []
@@ -476,7 +465,9 @@ class ScrabbleBoard():
         else:
             end_coords = (corresp_row + len(word)-1, corresp_column)
         if max(end_coords) > 14:
-            return False, f"The word will go out of the board! {end_coords}"
+            return False, Mistake(f"The word will go out of the board! {end_coords}")
+        if len(word) <= 1:
+            return False, Mistake(f"Single letters cannot be used as words!")
         for i, char in enumerate(word):
             #  We need to check for overlaps
             if hor:
@@ -487,7 +478,7 @@ class ScrabbleBoard():
                 passes_through_middle = True
             selected_board_piece = self.hypo_board[board_idx[0]][board_idx[1]]
             if selected_board_piece != char and selected_board_piece.isalpha():
-                return False, "Overlapping an original letter"
+                return False, Mistake("Overlapping an original letter")
             if selected_board_piece != char:
                 self.req_letters.append(char)
             # Now we know that this has to come from our hand.
@@ -508,14 +499,14 @@ class ScrabbleBoard():
                         neighbouring_words_all_info[0])
                     if not validation_check[0]:
                         # This move would be illegal
-                        return False, f"Invalid word found ({validation_check[1]})"
+                        return False, Mistake(f"Invalid word found ({validation_check[1]})")
                     additional_words = self.turn_to_words(
                         neighbouring_words_all_info)
                     #  Check for uniqueness. If not unique, add them to the set of words
                     all_additional_words.extend(additional_words)
 
         if not found_some_neighbours and not passes_through_middle:
-            return False, "Word is unconnected"
+            return False, Mistake("Word is unconnected")
         #  Point system needs fixing
         current_word = Word(word=word, start_pos=start, orientation=hor)
         self.word_score = current_word.get_score_unique()
@@ -579,7 +570,7 @@ class ScrabbleBoard():
             # self.insert_word(start, hor, word)
             return True
         else:
-            print(outcome[1])
+            outcome[1].display_response()
             return False
 
     def validation_check(self, word_list: list):

@@ -9,35 +9,36 @@ import copy
 #  "pip install pandas" if this doesn't exist
 import pandas as pd
 import os
+from responses import Instruction, Note, Mistake
 
 
 class Scrabble():
     def __init__(self, board: ScrabbleBoard, checker: InputChecker, letters_collection: Letters, log: bool = True):
         print(bcolors.OKGREEN)
         print(r"""
-          _____                    _____                    _____                    _____                    _____                    _____                    _____            _____          
-         /\    \                  /\    \                  /\    \                  /\    \                  /\    \                  /\    \                  /\    \          /\    \         
-        /::\    \                /::\    \                /::\    \                /::\    \                /::\    \                /::\    \                /::\____\        /::\    \        
-       /::::\    \              /::::\    \              /::::\    \              /::::\    \              /::::\    \              /::::\    \              /:::/    /       /::::\    \       
-      /::::::\    \            /::::::\    \            /::::::\    \            /::::::\    \            /::::::\    \            /::::::\    \            /:::/    /       /::::::\    \      
-     /:::/\:::\    \          /:::/\:::\    \          /:::/\:::\    \          /:::/\:::\    \          /:::/\:::\    \          /:::/\:::\    \          /:::/    /       /:::/\:::\    \     
-    /:::/__\:::\    \        /:::/  \:::\    \        /:::/__\:::\    \        /:::/__\:::\    \        /:::/__\:::\    \        /:::/__\:::\    \        /:::/    /       /:::/__\:::\    \    
-    \:::\   \:::\    \      /:::/    \:::\    \      /::::\   \:::\    \      /::::\   \:::\    \      /::::\   \:::\    \      /::::\   \:::\    \      /:::/    /       /::::\   \:::\    \   
-  ___\:::\   \:::\    \    /:::/    / \:::\    \    /::::::\   \:::\    \    /::::::\   \:::\    \    /::::::\   \:::\    \    /::::::\   \:::\    \    /:::/    /       /::::::\   \:::\    \  
- /\   \:::\   \:::\    \  /:::/    /   \:::\    \  /:::/\:::\   \:::\____\  /:::/\:::\   \:::\    \  /:::/\:::\   \:::\ ___\  /:::/\:::\   \:::\ ___\  /:::/    /       /:::/\:::\   \:::\    \ 
+          _____                    _____                    _____                    _____                    _____                    _____                    _____            _____
+         /\    \                  /\    \                  /\    \                  /\    \                  /\    \                  /\    \                  /\    \          /\    \
+        /::\    \                /::\    \                /::\    \                /::\    \                /::\    \                /::\    \                /::\____\        /::\    \
+       /::::\    \              /::::\    \              /::::\    \              /::::\    \              /::::\    \              /::::\    \              /:::/    /       /::::\    \
+      /::::::\    \            /::::::\    \            /::::::\    \            /::::::\    \            /::::::\    \            /::::::\    \            /:::/    /       /::::::\    \
+     /:::/\:::\    \          /:::/\:::\    \          /:::/\:::\    \          /:::/\:::\    \          /:::/\:::\    \          /:::/\:::\    \          /:::/    /       /:::/\:::\    \
+    /:::/__\:::\    \        /:::/  \:::\    \        /:::/__\:::\    \        /:::/__\:::\    \        /:::/__\:::\    \        /:::/__\:::\    \        /:::/    /       /:::/__\:::\    \
+    \:::\   \:::\    \      /:::/    \:::\    \      /::::\   \:::\    \      /::::\   \:::\    \      /::::\   \:::\    \      /::::\   \:::\    \      /:::/    /       /::::\   \:::\    \
+  ___\:::\   \:::\    \    /:::/    / \:::\    \    /::::::\   \:::\    \    /::::::\   \:::\    \    /::::::\   \:::\    \    /::::::\   \:::\    \    /:::/    /       /::::::\   \:::\    \
+ /\   \:::\   \:::\    \  /:::/    /   \:::\    \  /:::/\:::\   \:::\____\  /:::/\:::\   \:::\    \  /:::/\:::\   \:::\ ___\  /:::/\:::\   \:::\ ___\  /:::/    /       /:::/\:::\   \:::\    \
 /::\   \:::\   \:::\____\/:::/____/     \:::\____\/:::/  \:::\   \:::|    |/:::/  \:::\   \:::\____\/:::/__\:::\   \:::|    |/:::/__\:::\   \:::|    |/:::/____/       /:::/__\:::\   \:::\____\
 \:::\   \:::\   \::/    /\:::\    \      \::/    /\::/   |::::\  /:::|____|\::/    \:::\  /:::/    /\:::\   \:::\  /:::|____|\:::\   \:::\  /:::|____|\:::\    \       \:::\   \:::\   \::/    /
- \:::\   \:::\   \/____/  \:::\    \      \/____/  \/____|:::::\/:::/    /  \/____/ \:::\/:::/    /  \:::\   \:::\/:::/    /  \:::\   \:::\/:::/    /  \:::\    \       \:::\   \:::\   \/____/ 
-  \:::\   \:::\    \       \:::\    \                    |:::::::::/    /            \::::::/    /    \:::\   \::::::/    /    \:::\   \::::::/    /    \:::\    \       \:::\   \:::\    \     
-   \:::\   \:::\____\       \:::\    \                   |::|\::::/    /              \::::/    /      \:::\   \::::/    /      \:::\   \::::/    /      \:::\    \       \:::\   \:::\____\    
-    \:::\  /:::/    /        \:::\    \                  |::| \::/____/               /:::/    /        \:::\  /:::/    /        \:::\  /:::/    /        \:::\    \       \:::\   \::/    /    
-     \:::\/:::/    /          \:::\    \                 |::|  ~|                    /:::/    /          \:::\/:::/    /          \:::\/:::/    /          \:::\    \       \:::\   \/____/     
-      \::::::/    /            \:::\    \                |::|   |                   /:::/    /            \::::::/    /            \::::::/    /            \:::\    \       \:::\    \         
-       \::::/    /              \:::\____\               \::|   |                  /:::/    /              \::::/    /              \::::/    /              \:::\____\       \:::\____\        
-        \::/    /                \::/    /                \:|   |                  \::/    /                \::/____/                \::/____/                \::/    /        \::/    /        
-         \/____/                  \/____/                  \|___|                   \/____/                  ~~                       ~~                       \/____/          \/____/         
-                                                                                                                                                                                                
-              
+ \:::\   \:::\   \/____/  \:::\    \      \/____/  \/____|:::::\/:::/    /  \/____/ \:::\/:::/    /  \:::\   \:::\/:::/    /  \:::\   \:::\/:::/    /  \:::\    \       \:::\   \:::\   \/____/
+  \:::\   \:::\    \       \:::\    \                    |:::::::::/    /            \::::::/    /    \:::\   \::::::/    /    \:::\   \::::::/    /    \:::\    \       \:::\   \:::\    \
+   \:::\   \:::\____\       \:::\    \                   |::|\::::/    /              \::::/    /      \:::\   \::::/    /      \:::\   \::::/    /      \:::\    \       \:::\   \:::\____\
+    \:::\  /:::/    /        \:::\    \                  |::| \::/____/               /:::/    /        \:::\  /:::/    /        \:::\  /:::/    /        \:::\    \       \:::\   \::/    /
+     \:::\/:::/    /          \:::\    \                 |::|  ~|                    /:::/    /          \:::\/:::/    /          \:::\/:::/    /          \:::\    \       \:::\   \/____/
+      \::::::/    /            \:::\    \                |::|   |                   /:::/    /            \::::::/    /            \::::::/    /            \:::\    \       \:::\    \
+       \::::/    /              \:::\____\               \::|   |                  /:::/    /              \::::/    /              \::::/    /              \:::\____\       \:::\____\
+        \::/    /                \::/    /                \:|   |                  \::/    /                \::/____/                \::/____/                \::/    /        \::/    /
+         \/____/                  \/____/                  \|___|                   \/____/                  ~~                       ~~                       \/____/          \/____/
+
+
               """)
         print(bcolors.ENDC)
         self.board = board
@@ -81,10 +82,11 @@ class Scrabble():
         slot_valid, hor_valid, word_valid = None, None, None
 
         while not slot_valid:
-            print("NOTE: If trying to fill a word with existing letters,"
-                  "type the full word in e.g. placing 'g' in 'e(g)g', type 'egg'")
+            note = Note(
+                "If trying to fill a word with existing letters, type the full word in e.g. placing 'g' in 'e(g)g', type 'egg'")
+            note.display_response()
             self.slot = input(
-                "Please insert your starting point (0-224) or 'swap' to swap tiles: ").strip()
+                Instruction("Please insert your starting point (0-224) or 'swap' to swap tiles: ").full_msg).strip()
             self.checker.user_in = self.slot
             slot_valid = self.checker.validate_input_slot()
             if self.slot == "swap":
@@ -93,12 +95,13 @@ class Scrabble():
         self.slot = int(self.slot)
         while not hor_valid:
             self.hor_vert = input(
-                "Please specify if the word is vertical (v) or horizontal (h): ").strip()
+                Instruction("Please specify if the word is vertical (v) or horizontal (h): ").full_msg).strip()
             self.checker.user_in = self.hor_vert
             hor_valid = self.checker.validate_hor()
         self.hor_input = False if self.hor_vert == "v" else True
         while not word_valid:
-            self.word_input = input("Please enter your word: ").strip()
+            self.word_input = input(Instruction(
+                "Please enter your word: ").full_msg).strip()
             self.checker.user_in = self.word_input
             word_valid = self.checker.validate_word_input()
 
@@ -118,6 +121,7 @@ class Scrabble():
     def take_turn(self):
         print(f"{self.curr_player.name}'s turn")
         print(self.curr_player)
+        self.board.word_score = 0
         move = self.take_input()
         #  Player can either play a word here or swap tiles
         if move == "swap":
@@ -131,8 +135,7 @@ class Scrabble():
             for letter in self.board.req_letters:
                 if letter.upper() not in player_letters:
                     print(
-                        f"You don't have those letters.")
-
+                        Mistake(f"You don't have those letters.").full_msg)
                     return False
                 player_letters.remove(letter)
             #  place_letters will place them on the board.
@@ -154,7 +157,7 @@ class Scrabble():
                 while not self.take_turn():
                     if i == 0:
                         print(
-                            "REMEMBER: First word has to go through the centre (112)")
+                            Note("REMEMBER: First word has to go through the centre (112)").full_msg)
 
                 self.curr_player.score += self.board.word_score
                 print(
