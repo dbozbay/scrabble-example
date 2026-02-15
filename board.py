@@ -411,7 +411,8 @@ class ScrabbleBoard():
             for element in line:
                 if element.isalpha():
                     # adds the purple colour to the letter.
-                    print(f"\033[95m    {element}\033[0m".rjust(5), end="|")
+                    print(
+                        f"\033[1m \033[95m   {element}\033[0m".rjust(5), end="|")
                 else:
                     print(element.rjust(5), end="|")
             print("\n" + "-"*100)
