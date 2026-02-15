@@ -424,12 +424,9 @@ class ScrabbleBoard():
         coords = list(coords)
         word_coords = []
         if self.left(coords).isalpha() or self.right(coords).isalpha():
-            print("Found horiz")
             while self.left(coords).isalpha():
                 coords[1] = coords[1] - 1
-            print(self.letter_in_pos(coords))
             word_coords.append(coords.copy())
-            print(f"Start coords at {self.conv_coords_to_idx(coords)}")
             words[0] += self.letter_in_pos(coords)
             while self.right(coords).isalpha():
                 words[0] += self.right(coords)
@@ -440,17 +437,14 @@ class ScrabbleBoard():
         coords = coords_orig
         if self.up(coords).isalpha() or self.down(coords).isalpha():
             # Word is vertical
-            print("Found vertical")
             while self.up(coords).isalpha():
                 print(self.up(coords))
                 coords[0] = coords[0] - 1
             word_coords.append(coords.copy())
             words[1] += self.letter_in_pos(coords)
-            print(f"Start coords at {self.conv_coords_to_idx(coords)}")
             while self.down(coords).isalpha():
                 words[1] += self.down(coords)
                 coords[0] = coords[0] + 1
-        print(f"Final word coords: {word_coords}")
         return [words, word_coords, [True, False]]
 
     def try_word(self, start: int, hor: bool, word: str) -> bool:
@@ -484,8 +478,6 @@ class ScrabbleBoard():
                 return False, "Overlapping an original letter"
             if selected_board_piece != char:
                 self.req_letters.append(char)
-                print(
-                    f"We require {char} in place of {selected_board_piece}")
             # Now we know that this has to come from our hand.
             self.hypo_board[board_idx[0]][board_idx[1]] = char
         for i in range(len(word)):
@@ -525,9 +517,6 @@ class ScrabbleBoard():
                 word_score = added_word.get_score_unique()
                 print(f"{word_score} points for {added_word.word}")
                 self.word_score += added_word.get_score_unique()
-
-        for unique_word in self.unique_words_found:
-            print(unique_word)
         return True, "Word is playable.", self.word_score
 
     def turn_to_words(self, collection_of_words: list[list]) -> list[Word]:
@@ -571,11 +560,9 @@ class ScrabbleBoard():
             else:
                 self.board[corresp_row + i][corresp_column] = char
         self.most_recent_move.update(pos=start, orientation=hor, word=word)
-        print("inserted word!")
 
     def input_word(self, start: int, hor: bool, word: str):
         outcome = self.try_word(start, hor, word)
-        print(outcome[0], outcome[1])
         if outcome[0]:
             # self.insert_word(start, hor, word)
             return True
@@ -585,9 +572,7 @@ class ScrabbleBoard():
 
     def validation_check(self, word_list: list):
         # Check all words formed are valid words
-        print(f"checking words {word_list}")
         for word in word_list:
-            print(f"checking {word}")
             if word not in self.all_words:
                 return False, word
         return True, "words passed"
@@ -598,6 +583,6 @@ if __name__ == "__main__":
     scrabble_board.display_board()
     # inserting alpha at the start and beta at some point.
     scrabble_board.input_word(110, True, "alpha")
-    scrabble_board.input_word(67, False, "eters")
+    scrabble_board.input_word(67, False, "peters")
     # scrabble_board.insert_word(51, False, "lalala")
     print(scrabble_board.letter_in_pos(scrabble_board.conv_idx_to_coords(66)))

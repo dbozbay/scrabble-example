@@ -21,10 +21,8 @@ class Letters():
         }
         self.pickup_tiles = [tile
                              for tile in self.tiles for i in range(self.tiles[tile])]
-        print(self.pickup_tiles)
 
     def pick_up_letters(self, current_letters: list):
-        print(f"current letters: {current_letters}")
         while len(current_letters) < self.max_letters_on_hand and self.pickup_tiles:
             random.shuffle(self.pickup_tiles)
             current_letters.append(self.pickup_tiles.pop())
