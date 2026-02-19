@@ -220,10 +220,11 @@ class Scrabble:
         return self.letters.pop()
 
 
-board = ScrabbleBoard()
-input_checker = InputChecker()
-letters = Letters()
-
 if __name__ == "__main__":
-    scrabble_example = Scrabble(board, input_checker, letters)
-    scrabble_example.play()
+    board = ScrabbleBoard()
+    input_checker = InputChecker()
+    letters = Letters()
+
+    if __name__ == "__main__":
+        scrabble_example = Scrabble(board, input_checker, letters)
+        scrabble_example.play()
