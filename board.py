@@ -27,7 +27,7 @@ class ScrabbleBoard:
         self.n_moves = 0
         self.middle = "112"  # Should start from the middle.
         self.mid_point = self.conv_idx_to_coords(int(self.middle))
-        self.get_words()
+        self.get_words(tiles_fp)
         self.unique_words_found = []
         self.word_score = 0
         self.most_recent_move = Move(None, None, None)
