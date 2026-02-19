@@ -1,11 +1,22 @@
 import copy
 from word import Word
-from test_board import Move
 from responses import Mistake
 
 
+class Move:
+    def __init__(self, pos: int, orientation: bool, word: str):
+        self.pos = pos
+        self.orientation = orientation
+        self.word = word
+
+    def update(self, pos: int, orientation: bool, word: str):
+        self.pos = pos
+        self.orientation = orientation
+        self.word = word
+
+
 class ScrabbleBoard:
-    def __init__(self):
+    def __init__(self, tiles_fp: str = None):
         """
         The place where tiles are placed in the Scrabble game
         Currently hardcoded to 15x15
@@ -21,12 +32,16 @@ class ScrabbleBoard:
         self.word_score = 0
         self.most_recent_move = Move(None, None, None)
 
-    def get_words(self):
+    def get_words(self, fname: str = None):
         """
         Extract the words from the scrabble_words.txt file.
         Words should be each written on a line.
         """
-        with open("scrabble_words.txt") as f:
+        if fname is None:
+            with open("scrabble_words.txt") as f:
+                self.all_words = f.read().split("\n")
+            return
+        with open(fname) as f:
             self.all_words = f.read().split("\n")
 
     def conv_idx_to_coords(self, idx: int) -> tuple:

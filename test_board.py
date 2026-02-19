@@ -3,32 +3,40 @@
 #  Some extreme plays
 import os
 import json
-
-
-class Move:
-    def __init__(self, pos: int, orientation: bool, word: str):
-        self.pos = pos
-        self.orientation = orientation
-        self.word = word
-
-    def update(self, pos: int, orientation: bool, word: str):
-        self.pos = pos
-        self.orientation = orientation
-        self.word = word
+from board import Move
 
 
 #  Perhaps we would have a speed game where these moves are automatically inserted.
-def test_board():
+
+
+def save_game_instance(moves_file: str):
     from game import Scrabble
     from board import ScrabbleBoard
     from letters import Letters
     from input_checker import InputChecker
     import pandas as pd
 
+    # To save final board after moves
     scrabble_board = ScrabbleBoard()
     input_checker = InputChecker()
     letters = Letters()
     scrabble_game = Scrabble(scrabble_board, input_checker, letters)
+
+    df = pd.read_csv(moves_file)
+    moves = []
+    for idx, row in df.iterrows():
+        move_conv = Move(row["starting_position"], row["hor"], row["word"])
+        moves.append(move_conv)
+    scrabble_game.play_auto(moves)
+    scrabble_game.save_board_json()
+
+
+def test_board():
+    from game import Scrabble
+    from board import ScrabbleBoard
+    from letters import Letters
+    from input_checker import InputChecker
+    import pandas as pd
 
     # To save final board after moves
 
@@ -43,7 +51,7 @@ def test_board():
     # To check final board (known) is consistent with moves
     testing_folder = "testing_games"
     for folder in os.listdir(testing_folder):
-        scrabble_board = ScrabbleBoard()
+        scrabble_board = ScrabbleBoard("scrabble_words_for_testing.txt")
         input_checker = InputChecker()
         letters = Letters()
         scrabble_game = Scrabble(scrabble_board, input_checker, letters)
