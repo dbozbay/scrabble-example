@@ -1,5 +1,3 @@
-
-
 #  Should probably add some tests here, will save time over time.
 #  Some typical games
 #  Some extreme plays
@@ -7,7 +5,7 @@ import os
 import json
 
 
-class Move():
+class Move:
     def __init__(self, pos: int, orientation: bool, word: str):
         self.pos = pos
         self.orientation = orientation
@@ -17,6 +15,7 @@ class Move():
         self.pos = pos
         self.orientation = orientation
         self.word = word
+
 
 #  Perhaps we would have a speed game where these moves are automatically inserted.
 

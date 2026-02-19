@@ -1,7 +1,7 @@
 import json
 
 
-class Word():
+class Word:
     def __init__(self, word, start_pos, orientation):
         self.word = word
         self.start_pos = start_pos
@@ -33,7 +33,7 @@ class Word():
             "W": 4,
             "X": 8,
             "Y": 4,
-            "Z": 10
+            "Z": 10,
         }
 
     def __str__(self):

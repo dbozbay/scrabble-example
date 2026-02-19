@@ -1,17 +1,23 @@
 class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
 
 
-class Response():
-    def __init__(self, message: str = None, prefix: str = None, colour=bcolors.OKBLUE, status: bool = True):
+class Response:
+    def __init__(
+        self,
+        message: str = None,
+        prefix: str = None,
+        colour=bcolors.OKBLUE,
+        status: bool = True,
+    ):
         print("PEWWWW")
         self.colour = colour  #  By default
         self.message = message
@@ -33,8 +39,7 @@ class Mistake(Response):
 
 class Instruction(Response):
     def __init__(self, message: str):
-        super().__init__(message, prefix="Instruction:",
-                         colour=bcolors.OKGREEN)
+        super().__init__(message, prefix="Instruction:", colour=bcolors.OKGREEN)
 
 
 class Note(Response):
@@ -44,5 +49,4 @@ class Note(Response):
 
 class Question(Response):
     def __init__(self, message: str):
-        super().__init__(message, prefix="Instruction:",
-                         colour=bcolors.OKBLUE)
+        super().__init__(message, prefix="Instruction:", colour=bcolors.OKBLUE)

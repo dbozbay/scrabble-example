@@ -6,14 +6,21 @@ from test_game import Move
 import json
 import random
 import copy
+
 #  "pip install pandas" if this doesn't exist
 import pandas as pd
 import os
 from responses import Instruction, Note, Mistake
 
 
-class Scrabble():
-    def __init__(self, board: ScrabbleBoard, checker: InputChecker, letters_collection: Letters, log: bool = True):
+class Scrabble:
+    def __init__(
+        self,
+        board: ScrabbleBoard,
+        checker: InputChecker,
+        letters_collection: Letters,
+        log: bool = True,
+    ):
         print(bcolors.OKGREEN)
         print(r"""
           _____                    _____                    _____                    _____                    _____                    _____                    _____            _____
@@ -67,15 +74,15 @@ class Scrabble():
 
     def start_names(self):
         while not self.checker.validate_n_players():
-            self.n_players = input(
-                "How many players do you want to play [2-4]? ")
+            self.n_players = input("How many players do you want to play [2-4]? ")
             self.checker.user_in = self.n_players
         self.n_players = int(self.n_players)
         for i in range(self.n_players):
             player_name = input(
-                f"Please insert player {i+1} name (skip for 'Player {i+1}'): ")
+                f"Please insert player {i + 1} name (skip for 'Player {i + 1}'): "
+            )
             if player_name.strip() == "":
-                player_name = f"Player {i+1}"
+                player_name = f"Player {i + 1}"
             self.players.append(Player(name=player_name))
 
     def take_input(self) -> str | None:
@@ -83,10 +90,14 @@ class Scrabble():
 
         while not slot_valid:
             note = Note(
-                "If trying to fill a word with existing letters, type the full word in e.g. placing 'g' in 'e(g)g', type 'egg'")
+                "If trying to fill a word with existing letters, type the full word in e.g. placing 'g' in 'e(g)g', type 'egg'"
+            )
             note.display_response()
             self.slot = input(
-                Instruction("Please insert your starting point (0-224) or 'swap' to swap tiles: ").full_msg).strip()
+                Instruction(
+                    "Please insert your starting point (0-224) or 'swap' to swap tiles: "
+                ).full_msg
+            ).strip()
             self.checker.user_in = self.slot
             slot_valid = self.checker.validate_input_slot()
             if self.slot == "swap":
@@ -95,13 +106,17 @@ class Scrabble():
         self.slot = int(self.slot)
         while not hor_valid:
             self.hor_vert = input(
-                Instruction("Please specify if the word is vertical (v) or horizontal (h): ").full_msg).strip()
+                Instruction(
+                    "Please specify if the word is vertical (v) or horizontal (h): "
+                ).full_msg
+            ).strip()
             self.checker.user_in = self.hor_vert
             hor_valid = self.checker.validate_hor()
         self.hor_input = False if self.hor_vert == "v" else True
         while not word_valid:
-            self.word_input = input(Instruction(
-                "Please enter your word: ").full_msg).strip()
+            self.word_input = input(
+                Instruction("Please enter your word: ").full_msg
+            ).strip()
             self.checker.user_in = self.word_input
             word_valid = self.checker.validate_word_input()
 
@@ -110,8 +125,7 @@ class Scrabble():
         current_player_letters = self.curr_player.letters.copy()
         # Copy is necessary as otherwise will overwrite letters
         # for all players
-        self.curr_player.letters = self.letters.pick_up_letters(
-            current_player_letters)
+        self.curr_player.letters = self.letters.pick_up_letters(current_player_letters)
 
     def place_letters(self):
         for letter in self.board.req_letters:
@@ -126,16 +140,14 @@ class Scrabble():
         #  Player can either play a word here or swap tiles
         if move == "swap":
             # Swap letters
-            self.letters.replace_all_letters(
-                self.curr_player.letters)
+            self.letters.replace_all_letters(self.curr_player.letters)
             return True
         if self.board.input_word(self.slot, self.hor_input, self.word_input):
             # Input found to be valid, but now we need to check if we have the relevant letters too
             player_letters = copy.deepcopy(self.curr_player.letters)
             for letter in self.board.req_letters:
                 if letter.upper() not in player_letters:
-                    print(
-                        Mistake(f"You don't have those letters.").full_msg)
+                    print(Mistake(f"You don't have those letters.").full_msg)
                     return False
                 player_letters.remove(letter)
             #  place_letters will place them on the board.
@@ -157,20 +169,28 @@ class Scrabble():
                 while not self.take_turn():
                     if i == 0:
                         print(
-                            Note("REMEMBER: First word has to go through the centre (112)").full_msg)
+                            Note(
+                                "REMEMBER: First word has to go through the centre (112)"
+                            ).full_msg
+                        )
 
                 self.curr_player.score += self.board.word_score
                 print(
-                    f"{self.curr_player.name} is now on {self.curr_player.score} points")
+                    f"{self.curr_player.name} is now on {self.curr_player.score} points"
+                )
                 if self.log:
                     move_info = {
                         "word": [self.board.most_recent_move.word],
                         "hor": [self.board.most_recent_move.orientation],
-                        "starting_position": [self.board.most_recent_move.pos]
+                        "starting_position": [self.board.most_recent_move.pos],
                     }
                     mode = "w" if self.header else "a"
                     pd.DataFrame.from_dict(move_info).to_csv(
-                        self.save_path + "moves.csv", mode=mode, header=self.header, index=False)
+                        self.save_path + "moves.csv",
+                        mode=mode,
+                        header=self.header,
+                        index=False,
+                    )
                     self.header = False
             i += 1
         # Game has ended at this point
@@ -184,10 +204,10 @@ class Scrabble():
             # Probably put a bunch of
             # moves in here then can
             # check
-            if self.board.input_word(
-                    moves[i].pos, moves[i].orientation, moves[i].word):
+            if self.board.input_word(moves[i].pos, moves[i].orientation, moves[i].word):
                 self.board.insert_word(
-                    moves[i].pos, moves[i].orientation, moves[i].word)
+                    moves[i].pos, moves[i].orientation, moves[i].word
+                )
             self.board.display_board()
             i += 1
 

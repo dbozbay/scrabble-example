@@ -1,4 +1,4 @@
-class Player():
+class Player:
     def __init__(self, name: str = "", score: int = 0, letters: list = []):
         self.name = name
         self.score = score

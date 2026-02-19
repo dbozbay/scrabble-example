@@ -6,11 +6,11 @@ from test_game import Move
 from responses import *
 
 
-class ScrabbleBoard():
+class ScrabbleBoard:
     def __init__(self):
         # Scrabble boards are 15x15 generally,
         # reoresented by nested list
-        self.board = [[str(i+j*15) for i in range(15)] for j in range(15)]
+        self.board = [[str(i + j * 15) for i in range(15)] for j in range(15)]
         self.hypo_board = self.board
         self.n_moves = 0
         self.middle = "112"  # Should start from the middle.
@@ -28,7 +28,7 @@ class ScrabbleBoard():
         return (idx // 15, idx % 15)
 
     def conv_coords_to_idx(self, coords: tuple) -> int:
-        return coords[0]*15 + coords[1]
+        return coords[0] * 15 + coords[1]
 
     def letter_in_pos(self, coords):
         return self.hypo_board[coords[0]][coords[1]]
@@ -36,22 +36,22 @@ class ScrabbleBoard():
     def down(self, coords):
         if self.down_edge(coords):
             return "999"
-        return self.hypo_board[coords[0]+1][coords[1]]
+        return self.hypo_board[coords[0] + 1][coords[1]]
 
     def up(self, coords):
         if self.up_edge(coords):
             return "999"
-        return self.hypo_board[coords[0]-1][coords[1]]
+        return self.hypo_board[coords[0] - 1][coords[1]]
 
     def left(self, coords):
         if self.left_edge(coords):
             return "999"
-        return self.hypo_board[coords[0]][coords[1]-1]
+        return self.hypo_board[coords[0]][coords[1] - 1]
 
     def right(self, coords):
         if self.right_edge(coords):
             return "999"
-        return self.hypo_board[coords[0]][coords[1]+1]
+        return self.hypo_board[coords[0]][coords[1] + 1]
 
     #  Edges checked so that no
     # accidental going outside list range.
@@ -88,46 +88,30 @@ class ScrabbleBoard():
     #                 continue
     #             coord_values.append()
 
-    def find_neighbours(self, coords: tuple, start: tuple, hor: bool, end: tuple) -> list:
+    def find_neighbours(
+        self, coords: tuple, start: tuple, hor: bool, end: tuple
+    ) -> list:
         if max(coords) < 14 and min(coords) > 0:
             if coords == start:
                 # 3 possible touch points at the start and at the end
                 if hor:
-                    return [
-                        self.down(coords),
-                        self.up(coords),
-                        self.left(coords)
-                    ]
+                    return [self.down(coords), self.up(coords), self.left(coords)]
                 else:
-                    return [
-                        self.right(coords),
-                        self.left(coords),
-                        self.up(coords)
-                    ]
+                    return [self.right(coords), self.left(coords), self.up(coords)]
             elif coords == end:
                 # 3 possible touch points at the start and at the end
                 if hor:
+                    return [self.down(coords), self.up(coords), self.right(coords)]
+                else:
+                    return [self.down(coords), self.left(coords), self.right(coords)]
+            else:
+                if hor:
                     return [
                         self.down(coords),
                         self.up(coords),
-                        self.right(coords)
                     ]
                 else:
-                    return [
-                        self.down(coords),
-                        self.left(coords),
-                        self.right(coords)
-                    ]
-            else:
-                if hor:
-                    return [self.down(coords),
-                            self.up(coords),
-                            ]
-                else:
-                    return [
-                        self.right(coords),
-                        self.left(coords)
-                    ]
+                    return [self.right(coords), self.left(coords)]
         elif coords[0] == 0 and coords[1] != 0:
             # The tile is placed in the top row so coords[0]-1 would no longer be possible.
             if coords == start:
@@ -145,10 +129,7 @@ class ScrabbleBoard():
             elif coords == end:
                 # 3 possible touch points at the start and at the end
                 if hor:
-                    return [
-                        self.down(coords),
-                        self.right(coords)
-                    ]
+                    return [self.down(coords), self.right(coords)]
                 else:
                     return [
                         self.right(coords),
@@ -157,8 +138,7 @@ class ScrabbleBoard():
                     ]
             else:
                 if hor:
-                    return [self.down(coords)
-                            ]
+                    return [self.down(coords)]
                 else:
                     return [
                         self.right(coords),
@@ -174,10 +154,7 @@ class ScrabbleBoard():
                         self.up(coords),
                     ]
                 else:
-                    return [
-                        self.right(coords),
-                        self.up(coords)
-                    ]
+                    return [self.right(coords), self.up(coords)]
             elif coords == end:
                 # 3 possible touch points at the start and at the end
                 if hor:
@@ -193,9 +170,10 @@ class ScrabbleBoard():
                     ]
             else:
                 if hor:
-                    return [self.down(coords),
-                            self.up(coords),
-                            ]
+                    return [
+                        self.down(coords),
+                        self.up(coords),
+                    ]
                 else:
                     return [
                         self.right(coords),
@@ -211,18 +189,11 @@ class ScrabbleBoard():
                         self.left(coords),
                     ]
                 else:
-                    return [
-                        self.right(coords),
-                        self.left(coords),
-                        self.up(coords)
-                    ]
+                    return [self.right(coords), self.left(coords), self.up(coords)]
             elif coords == end:
                 # 3 possible touch points at the start and at the end
                 if hor:
-                    return [
-                        self.up(coords),
-                        self.right(coords)
-                    ]
+                    return [self.up(coords), self.right(coords)]
                 else:
                     return [
                         self.right(coords),
@@ -250,10 +221,7 @@ class ScrabbleBoard():
                         self.left(coords),
                     ]
                 else:
-                    return [
-                        self.left(coords),
-                        self.up(coords)
-                    ]
+                    return [self.left(coords), self.up(coords)]
             elif coords == end:
                 # 3 possible touch points at the start and at the end
                 if hor:
@@ -268,9 +236,10 @@ class ScrabbleBoard():
                     ]
             else:
                 if hor:
-                    return [self.down(coords),
-                            self.up(coords),
-                            ]
+                    return [
+                        self.down(coords),
+                        self.up(coords),
+                    ]
                 else:
                     return [
                         self.left(coords),
@@ -285,17 +254,11 @@ class ScrabbleBoard():
                         self.up(coords),
                     ]
                 else:
-                    return [
-                        self.right(coords),
-                        self.up(coords)
-                    ]
+                    return [self.right(coords), self.up(coords)]
             elif coords == end:
                 # 3 possible touch points at the start and at the end
                 if hor:
-                    return [
-                        self.up(coords),
-                        self.right(coords)
-                    ]
+                    return [self.up(coords), self.right(coords)]
                 else:
                     return [
                         self.right(coords),
@@ -318,10 +281,7 @@ class ScrabbleBoard():
                         self.left(coords),
                     ]
                 else:
-                    return [
-                        self.left(coords),
-                        self.up(coords)
-                    ]
+                    return [self.left(coords), self.up(coords)]
             elif coords == end:
                 # 3 possible touch points at the start and at the end
                 if hor:
@@ -356,9 +316,7 @@ class ScrabbleBoard():
             elif coords == end:
                 # 3 possible touch points at the start and at the end
                 if hor:
-                    return [
-                        self.down(coords)
-                    ]
+                    return [self.down(coords)]
                 else:
                     return [
                         self.left(coords),
@@ -366,8 +324,7 @@ class ScrabbleBoard():
                     ]
             else:
                 if hor:
-                    return [self.down(coords)
-                            ]
+                    return [self.down(coords)]
                 else:
                     return [
                         self.left(coords),
@@ -377,9 +334,7 @@ class ScrabbleBoard():
             if coords == start:
                 # 3 possible touch points at the start and at the end
                 if hor:
-                    return [
-                        self.down(coords)
-                    ]
+                    return [self.down(coords)]
                 else:
                     return [
                         self.right(coords),
@@ -387,10 +342,7 @@ class ScrabbleBoard():
             elif coords == end:
                 # 3 possible touch points at the start and at the end
                 if hor:
-                    return [
-                        self.down(coords),
-                        self.right(coords)
-                    ]
+                    return [self.down(coords), self.right(coords)]
                 else:
                     return [
                         self.right(coords),
@@ -398,25 +350,23 @@ class ScrabbleBoard():
                     ]
             else:
                 if hor:
-                    return [self.down(coords)
-                            ]
+                    return [self.down(coords)]
                 else:
                     return [
                         self.right(coords),
                     ]
 
     def display_board(self):
-        print("\n"*4)
+        print("\n" * 4)
         for line in self.board:
             for element in line:
                 if element.isalpha():
                     # adds the purple colour to the letter.
-                    print(
-                        f"\033[1m \033[95m   {element}\033[0m".rjust(5), end="|")
+                    print(f"\033[1m \033[95m   {element}\033[0m".rjust(5), end="|")
                 else:
                     print(element.rjust(5), end="|")
-            print("\n" + "-"*100)
-        print("\n"*4)
+            print("\n" + "-" * 100)
+        print("\n" * 4)
 
     def gain_word_from_letter(self, coords):
         # This lets us see if the word is going vertically or horizontally
@@ -462,9 +412,9 @@ class ScrabbleBoard():
         start_coords = (corresp_row, corresp_column)
         self.hypo_board = copy.deepcopy(self.board)
         if hor:
-            end_coords = (corresp_row, corresp_column + len(word)-1)
+            end_coords = (corresp_row, corresp_column + len(word) - 1)
         else:
-            end_coords = (corresp_row + len(word)-1, corresp_column)
+            end_coords = (corresp_row + len(word) - 1, corresp_column)
         if max(end_coords) > 14:
             return False, Mistake(f"The word will go out of the board! {end_coords}")
         if len(word) <= 1:
@@ -491,18 +441,23 @@ class ScrabbleBoard():
             else:
                 letter_row = corresp_row + i
                 letter_col = corresp_column
-            for neighbour in self.find_neighbours((letter_row, letter_col), start_coords, hor, end_coords):
+            for neighbour in self.find_neighbours(
+                (letter_row, letter_col), start_coords, hor, end_coords
+            ):
                 if neighbour.isalpha():
                     neighbouring_words_all_info = self.gain_word_from_letter(
-                        (letter_row, letter_col))
+                        (letter_row, letter_col)
+                    )
                     found_some_neighbours = True
                     validation_check = self.validation_check(
-                        neighbouring_words_all_info[0])
+                        neighbouring_words_all_info[0]
+                    )
                     if not validation_check[0]:
                         # This move would be illegal
-                        return False, Mistake(f"Invalid word found ({validation_check[1]})")
-                    additional_words = self.turn_to_words(
-                        neighbouring_words_all_info)
+                        return False, Mistake(
+                            f"Invalid word found ({validation_check[1]})"
+                        )
+                    additional_words = self.turn_to_words(neighbouring_words_all_info)
                     #  Check for uniqueness. If not unique, add them to the set of words
                     all_additional_words.extend(additional_words)
 
@@ -533,8 +488,13 @@ class ScrabbleBoard():
         """
         words_list = []
         for i in range(len(collection_of_words[0])):
-            words_list.append(self.turn_to_word(
-                collection_of_words[0][i], self.conv_coords_to_idx(collection_of_words[1][i]), collection_of_words[2][i]))
+            words_list.append(
+                self.turn_to_word(
+                    collection_of_words[0][i],
+                    self.conv_coords_to_idx(collection_of_words[1][i]),
+                    collection_of_words[2][i],
+                )
+            )
         return words_list
 
     def turn_to_word(self, word, start_pos, orientation) -> Word:
@@ -551,7 +511,11 @@ class ScrabbleBoard():
         if checking_word == "":
             checking_word.new = False
         for word in self.unique_words_found:
-            if word.word == checking_word.word and word.start_pos == checking_word.start_pos and word.orientation == checking_word.orientation:
+            if (
+                word.word == checking_word.word
+                and word.start_pos == checking_word.start_pos
+                and word.orientation == checking_word.orientation
+            ):
                 checking_word.new = False
         return True
 

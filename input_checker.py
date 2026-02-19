@@ -1,6 +1,4 @@
-
-
-class InputChecker():
+class InputChecker:
     def __init__(self, initial_in: str = None):
         self.user_in = initial_in
         pass
