@@ -1,7 +1,5 @@
-import random
 import copy
 from word import Word
-import json
 from test_game import Move
 from responses import *
 
@@ -418,7 +416,7 @@ class ScrabbleBoard:
         if max(end_coords) > 14:
             return False, Mistake(f"The word will go out of the board! {end_coords}")
         if len(word) <= 1:
-            return False, Mistake(f"Single letters cannot be used as words!")
+            return False, Mistake("Single letters cannot be used as words!")
         for i, char in enumerate(word):
             #  We need to check for overlaps
             if hor:

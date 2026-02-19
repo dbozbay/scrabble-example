@@ -147,7 +147,7 @@ class Scrabble:
             player_letters = copy.deepcopy(self.curr_player.letters)
             for letter in self.board.req_letters:
                 if letter.upper() not in player_letters:
-                    print(Mistake(f"You don't have those letters.").full_msg)
+                    print(Mistake("You don't have those letters.").full_msg)
                     return False
                 player_letters.remove(letter)
             #  place_letters will place them on the board.

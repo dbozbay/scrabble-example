@@ -23,7 +23,6 @@ class Move:
 if __name__ == "__main__":
     from game import Scrabble
     from board import ScrabbleBoard
-    from player import Player
     from letters import Letters
     from input_checker import InputChecker
     import pandas as pd
