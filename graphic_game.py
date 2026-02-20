@@ -10,51 +10,66 @@ def coord_to_px(coords: tuple[int, int]) -> tuple[int, int]:
     return tuple([int((TILEWIDTH) * coord) for coord in coords])
 
 
-def populate_with_coords(surf: pygame.Surface) -> pygame.Surface:
-    for i in range(15):
-        for j in range(15):
-            coord_value = (i, j)
-            px_value = coord_to_px(coord_value)
-            print(px_value)
-            pygame.draw.circle(surf, (255, 0, 0), px_value, 10)
-    return surf
+class ScrabbleSurface(pygame.Surface):
+    def __init__(self):
+        pygame.init()
+        pygame.display.set_mode((600, 800))
+        self.fill("green")
+        self.bg_image = pygame.image.load("images/scrabble_board_img.jpg")
+
+    def populate_with_coords(self):
+        for i in range(15):
+            for j in range(15):
+                coord_value = (i, j)
+                px_value = coord_to_px(coord_value)
+                pygame.draw.circle(self, (255, 0, 0), px_value, 10)
+
+    def add_bg(self):
+        self.blit(self.bg_image, (0, 0))
+
+    def add_tile(self, pos: tuple[int, int]):
+        """
+        Adding the white scrabble tile to the point.
+        """
+        pygame.draw.rect(self, (255, 255, 255), (pos[0], pos[1], 40, 40))
+
+    def add_letter(self, pos: tuple[int, int], letter: str):
+
+        my_font = pygame.font.SysFont("Calibri", 36, bold=True)
+        text_surface = my_font.render(letter, False, (0, 0, 0))
+        letter_pos = (pos[0] + TILEWIDTH / 5, pos[1])
+        self.blit(text_surface, letter_pos)
+
+    def add_scrabble_tile(self, pos: tuple[int, int], letter: str):
+        self.add_tile(pos)
+        self.add_letter(pos, letter)
+
+    def add_letters_from_board(
+        self,
+        board: ScrabbleBoard,
+    ):
+        for i, row in enumerate(board.board):
+            for j, letter in enumerate(row):
+                current_coord = (i, j)
+                if not letter.isdigit():
+                    self.add_scrabble_tile(current_coord, letter)
 
 
-def add_letter(
-    surf: pygame.Surface, pos: tuple[int, int], letter: str
-) -> pygame.Surface:
-
-    my_font = pygame.font.SysFont("Calibri", 36)
-    text_surface = my_font.render(letter, False, (0, 0, 255))
-    letter_pos = (pos[0] + TILEWIDTH / 5, pos[1])
-    surf.blit(text_surface, letter_pos)
-    return surf
-
-
-def add_letters_from_board(
-    board: ScrabbleBoard,
-) -> pygame.Surface:
-    pass
-
-
-pygame.init()
 # Setting game window dimensions
-window_width = 600
-window_height = 800  # Want the extra 200 for placing tiles on and stuff
-game_display = pygame.display.set_mode((window_width, window_height))
-game_display.fill("green")
-# Loading the image
-bg_image = pygame.image.load("images/scrabble_board_img.jpg")
+game_display = ScrabbleSurface()
 # bg_image = pygame.transform.scale(bg_image, (1, 1))
 # Main game loop
+
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
     # Drawing image at position (0,0)
-    game_display.blit(bg_image, (0, 0))
-    game_display = populate_with_coords(game_display)
-    game_display = add_letter(game_display, coord_to_px((0, 0)), "A")
-    pygame.display.update()
+    game_display.add_bg()
+
+    game_display.populate_with_coords()
+    game_display.add_tile(coord_to_px((0, 0)))
+    game_display.add_letter(coord_to_px((0, 0)), "A")
+    pygame.display.flip()
 pygame.quit()
