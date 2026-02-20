@@ -94,8 +94,12 @@ class ScrabbleBoard:
         return True
 
     def find_neighbours(
-        self, coords: tuple, start: tuple, hor: bool, end: tuple
+        self, coords: tuple, start: tuple, word: str, hor: bool
     ) -> list:
+        if hor:
+            end = (start[0], start[1] + len(word) - 1)
+        else:
+            end = (start[0] + len(word) - 1, start[1])
         if max(coords) < 14 and min(coords) > 0:
             if coords == start:
                 # 3 possible touch points at the start and at the end
@@ -455,7 +459,7 @@ class ScrabbleBoard:
                 letter_row = corresp_row + i
                 letter_col = corresp_column
             for neighbour in self.find_neighbours(
-                (letter_row, letter_col), start_coords, hor, end_coords
+                (letter_row, letter_col), start_coords, word, hor
             ):
                 if neighbour.isalpha():
                     neighbouring_words_all_info = self.gain_word_from_letter(
